@@ -19,7 +19,7 @@ def elastic_pendulum(t,y):
     return yvec
 
 # Define Problem 
-initial_conditions = [1.0, 0.0, 0.0, 0.0]  # initial position (x,y) and velocity (vx, vy)
+initial_conditions = [1.1, 0.0, 0.1, 0.0]  # initial position (x,y) and velocity (vx, vy)
 eP_Problem = apro.Explicit_Problem(elastic_pendulum, t0 = 0, y0 = initial_conditions)
 eP_Problem.name = r'Elastic Pendulum (m={m}, k={k}, L0={L0}, g={g})'
 eP_Problem.name = eP_Problem.name.format(m=m, k=k, L0=L0, g=g)
@@ -29,7 +29,7 @@ eP_Solver = asol.CVode(eP_Problem)
 eP_Solver.reset() # Why is this needed here?
 t_sol, x_sol = eP_Solver.simulate(50, 1000) # simulate(tf, ncp)
 
-
+# Plot Results
 plt.figure()
 
 plt.plot(t_sol, x_sol[:,0], label=r'$x(t)$')
