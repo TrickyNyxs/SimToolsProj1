@@ -17,8 +17,8 @@ class Explicit_Euler(Explicit_ODE):
         Explicit_ODE.__init__(self, problem) #Calls the base class
         
         #Solver options
-        self.options["h"] = 0.01
-        
+        self.options["h"] = 0.01  # Step size
+        print(self.options["h"])
         #Statistics
         self.statistics["nsteps"] = 0
         self.statistics["nfcns"] = 0
@@ -37,6 +37,7 @@ class Explicit_Euler(Explicit_ODE):
         """
         h = self.options["h"]
         h = min(h, abs(tf-t))
+        print(h)
         
         #Lists for storing the result
         tres = []
