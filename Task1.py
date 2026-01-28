@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import assimulo.problem as apro
+import matplotlib.pyplot as mpl
 import assimulo.solvers as asol
+import BDF4Solver
 
 # Paramters for the elastic pendulum
 m = 1.0      # mass
@@ -27,7 +29,7 @@ eP_Problem.name = eP_Problem.name.format(m=m, k=k, L0=L0, g=g)
 # CVode Solver
 eP_Solver = asol.CVode(eP_Problem)
 eP_Solver.reset() # Why is this needed here?
-t_sol, x_sol = eP_Solver.simulate(50, 1000) # simulate(tf, ncp)
+t_sol, x_sol = eP_Solver.simulate(4, 1000) # simulate(tf, ncp)
 
 # Plot Results
 plt.figure()
@@ -43,3 +45,9 @@ plt.legend()
 plt.title(eP_Problem.name)
 plt.grid(True)
 plt.show()
+
+# Own Solution with BDF4
+exp_sim = BDF4Solver.BDF4(eP_Problem) #Create a BDF solver
+t, y = exp_sim.simulate(4)
+exp_sim.plot()
+mpl.show()
