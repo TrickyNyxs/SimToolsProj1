@@ -11,7 +11,8 @@ class BDF4(Explicit_ODE):
     #Define variables
     tol=1.e-8     
     maxit=100     
-    maxsteps=500
+    maxsteps=1000
+    
     
     def __init__(self, problem): #Initialize the class
         Explicit_ODE.__init__(self, problem) #Calls the base class
@@ -66,6 +67,7 @@ class BDF4(Explicit_ODE):
         t_nm1,t_nm2,t_nm3= 0, 0, 0
         y_nm1,y_nm2,y_nm3= 0, 0, 0
         
+        self.maxsteps = 1000
         for i in range(self.maxsteps):
             if t >= tf:
                 break
