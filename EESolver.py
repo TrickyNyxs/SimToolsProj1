@@ -11,14 +11,14 @@ class Explicit_Euler(Explicit_ODE):
     """
     tol=1.e-8     
     maxit=100     
-    maxsteps=500
     
     def __init__(self, problem):
         Explicit_ODE.__init__(self, problem) #Calls the base class
         
         #Solver options
         self.options["h"] = 0.01  # Step size
-        print(self.options["h"])
+        self.maxsteps = 100000  # Instance variable, not class variable
+        
         #Statistics
         self.statistics["nsteps"] = 0
         self.statistics["nfcns"] = 0
@@ -37,7 +37,6 @@ class Explicit_Euler(Explicit_ODE):
         """
         h = self.options["h"]
         h = min(h, abs(tf-t))
-        print(h)
         
         #Lists for storing the result
         tres = []
@@ -58,7 +57,7 @@ class Explicit_Euler(Explicit_ODE):
         
             h=min(self.h,np.abs(tf-t))
         else:
-            raise Explicit_ODE_Exception('Final time not reached within maximum number of steps')
+            raise Exception('Final time not reached within maximum number of steps')
         
         return ID_PY_OK, tres, yres
     

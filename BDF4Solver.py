@@ -11,13 +11,13 @@ class BDF4(Explicit_ODE):
     #Define variables
     tol=1.e-8     
     maxit=100     
-    maxsteps=500
     
     def __init__(self, problem): #Initialize the class
         Explicit_ODE.__init__(self, problem) #Calls the base class
         
         #Solver options
         self.options["h"] = 0.01
+        self.maxsteps = 100000  # Instance variable, not class variable
         
         #Statistics
         self.statistics["nsteps"] = 0
@@ -63,8 +63,9 @@ class BDF4(Explicit_ODE):
         tres = []
         yres = []
         
-        t_nm1,t_nm2,t_nm3= 0, 0, 0
-        y_nm1,y_nm2,y_nm3= 0, 0, 0
+        # Initialize historical states to current state (will be overwritten on first iterations)
+        t_nm1,t_nm2,t_nm3= t, t, t
+        y_nm1,y_nm2,y_nm3= y.copy(), y.copy(), y.copy()
         
         for i in range(self.maxsteps):
             if t >= tf:
@@ -87,7 +88,7 @@ class BDF4(Explicit_ODE):
         
             h=min(self.h,np.abs(tf-t))
         else:
-            raise Explicit_ODE_Exception('Final time not reached within maximum number of steps')
+            raise Exception('Final time not reached within maximum number of steps')
         
         return ID_PY_OK, tres, yres
     
@@ -131,7 +132,7 @@ class BDF4(Explicit_ODE):
                 return t_np1,y_np1_ip1
             y_np1_i=y_np1_ip1
         else:
-            raise Explicit_ODE_Exception('Corrector could not converge within % iterations'%i)
+            raise Exception('Corrector could not converge within %d iterations'%i)
     
     def step_BDF3(self,T,Y, h):
         alpha = [11./6., -3., 3./2., -1./3.]
@@ -156,7 +157,7 @@ class BDF4(Explicit_ODE):
                 return t_np1, y_np1_ip1
             y_np1_i = y_np1_ip1
         else:
-            raise Explicit_ODE_Exception('Corrector could not converge within % iterations' % i)
+            raise Exception('Corrector could not converge within %d iterations' % i)
         
     def step_BDF4(self,T,Y, h):
         alpha = [25./12., -4., 3., -4./3., 1./4.]
@@ -181,7 +182,7 @@ class BDF4(Explicit_ODE):
                 return t_np1, y_np1_ip1
             y_np1_i = y_np1_ip1
         else:
-            raise Explicit_ODE_Exception('Corrector could not converge within % iterations' % i)
+            raise Exception('Corrector could not converge within %d iterations' % i)
     
     def print_statistics(self, verbose=NORMAL):
         self.log_message('Final Run Statistics            : {name} \n'.format(name=self.problem.name),        verbose)

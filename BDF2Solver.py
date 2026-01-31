@@ -11,13 +11,13 @@ class BDF_2(Explicit_ODE):
     """
     tol=1.e-8     
     maxit=100     
-    maxsteps=500
     
     def __init__(self, problem):
         Explicit_ODE.__init__(self, problem) #Calls the base class
         
         #Solver options
         self.options["h"] = 0.01
+        self.maxsteps = 100000  # Instance variable, not class variable
         
         #Statistics
         self.statistics["nsteps"] = 0
@@ -42,6 +42,10 @@ class BDF_2(Explicit_ODE):
         tres = []
         yres = []
         
+        # Initialize historical states to current state (will be overwritten after first step)
+        t_nm1 = t
+        y_nm1 = y.copy()
+        
         for i in range(self.maxsteps):
             if t >= tf:
                 break
@@ -59,7 +63,7 @@ class BDF_2(Explicit_ODE):
         
             h=min(self.h,np.abs(tf-t))
         else:
-            raise Explicit_ODE_Exception('Final time not reached within maximum number of steps')
+            raise Exception('Final time not reached within maximum number of steps')
         
         return ID_PY_OK, tres, yres
     
@@ -96,7 +100,7 @@ class BDF_2(Explicit_ODE):
                 return t_np1,y_np1_ip1
             y_np1_i=y_np1_ip1
         else:
-            raise Explicit_ODE_Exception('Corrector could not converge within % iterations'%i)
+            raise Exception('Corrector could not converge within %d iterations'%i)
             
     def print_statistics(self, verbose=NORMAL):
         self.log_message('Final Run Statistics            : {name} \n'.format(name=self.problem.name),        verbose)
